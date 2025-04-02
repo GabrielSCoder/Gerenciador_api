@@ -15,6 +15,8 @@ class Sessao extends Model {
             as : "usuario"
         })
     }
+
+    
 }
 
 Sessao.init({

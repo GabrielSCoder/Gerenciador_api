@@ -3,3 +3,9 @@ export type perfilAcessoForm = {
     ativo: boolean
     descricao: string
 }
+
+export type perfilAcessoItemForm = {
+    acao : string
+    controller : string
+    perfil_acesso_id : number
+}

@@ -14,7 +14,7 @@ export async function login(data: loginForm, res: any) {
 
     if (usuario && usuario.check(data.senha)) {
 
-        const { accessToken, refreshToken } = generateTokens(usuario.id)
+        const { accessToken, refreshToken } = generateTokens(usuario.id, usuario.perfil_acesso_id)
 
         res.cookie("rfssid", refreshToken, {
             httpOnly: true,
@@ -62,10 +62,10 @@ export async function logout(req: any, data: loginForm, res: any) {
     return usuario.id
 }
 
-export function generateTokens(userId: number) {
+export function generateTokens(userId: number, perfilId : number) {
     console.log("-----------", userId)
-    const accessToken = jwt.sign({ id: userId }, process.env.ACCESS_KEY as string, { expiresIn: "15s" })
-    const refreshToken = jwt.sign({ id: userId, criado: Date.now() }, process.env.REFRESH_KEY as string, { expiresIn: "2min" })
+    const accessToken = jwt.sign({ id: userId, perfil : perfilId }, process.env.ACCESS_KEY as string, { expiresIn: "2hr" })
+    const refreshToken = jwt.sign({ id: userId, perfil : perfilId,  criado: Date.now() }, process.env.REFRESH_KEY as string, { expiresIn: "5hr" })
 
     return { accessToken, refreshToken }
 }

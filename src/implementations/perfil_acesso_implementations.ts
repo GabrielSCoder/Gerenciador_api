@@ -1,7 +1,8 @@
 import Perfil_Acesso from "../db/models/perfil_acesso";
+import Perfil_Acesso_Item from "../db/models/perfil_acesso_item";
 import Usuario from "../db/models/usuario";
 import { perfilAcessoForm } from "../types/perfil_acesso";
-
+import jwt from "jsonwebtoken"
 
 function validar(data: perfilAcessoForm) {
     if (!data.descricao || !data.nome)
@@ -13,11 +14,10 @@ function validarEdição(data: perfilAcessoForm & { id: number }) {
         throw new Error("Dados obrigatórios")
 }
 
-
 export async function criar(data: perfilAcessoForm) {
     validar(data)
 
-    const persist = await Perfil_Acesso.create({ ...data, usuario_criacao: 1, data_criacao: Date.now() })
+    const persist = await Perfil_Acesso.create({ ...data, data_criacao: Date.now() })
 
     if (!persist) throw new Error("Erro na criação")
 
@@ -68,10 +68,38 @@ export async function getItem(id : number) {
     return item
 }
 
-export async function getAllUsers (id : number) {
+export async function getAllUsersByPerfil (id : number) {
     await getById(id)
 
     const list = await Usuario.findAll({ where : {
         perfil_acesso_id : id
-    }, include : {}})
+    }})
+
+    return list
+}
+
+export async function getAll () {
+
+    const list = await Perfil_Acesso.findAll()
+
+    return list
+}
+
+export async function getallPermissions (id : number) {
+    const list = await Perfil_Acesso_Item.findAll({where : {perfil_acesso_id : id }})
+    return list
+}
+
+export async function verificarPermissao (controller : string, acao : string, token : string) {
+
+    const tkn = token.split(" ")[1]
+
+    const decode = jwt.verify(tkn, process.env.ACCESS_KEY as string)
+
+    if (typeof decode == "object" && "perfil" in decode) {
+        const check = await Perfil_Acesso_Item.findAll({where : {controller : controller, acao : acao.toUpperCase(), perfil_acesso_id : decode.perfil}})
+        if (check.length == 1) return;
+    }
+
+    throw new Error("Ação não permitida com perfil atual")
 }

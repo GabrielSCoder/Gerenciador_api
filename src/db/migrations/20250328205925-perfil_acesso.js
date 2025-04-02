@@ -25,11 +25,11 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       usuario_modificacao: {
-        allowNull: false, type: Sequelize.INTEGER, references: { model: "usuario", key: "id" },
+        allowNull: true, type: Sequelize.INTEGER, references: { model: "usuario", key: "id" },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      data_modificao: { allowNull: true, type: Sequelize.DATE }
+      data_modificacao: { allowNull: true, type: Sequelize.DATE }
     })
   },
 

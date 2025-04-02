@@ -1,5 +1,4 @@
-import { DataTypes, Model } from "sequelize"
-import db from "."
+import { DataTypes, Model, Sequelize } from "sequelize"
 
 class Perfil_Acesso_Item extends Model {
     declare id: number
@@ -11,27 +10,29 @@ class Perfil_Acesso_Item extends Model {
     declare usuario_criacao: number
     declare usuario_modificacao: number
 
-    static associate(models : any) {
+    static associate(models: any) {
         Perfil_Acesso_Item.belongsTo(models.Perfil_Acesso, {
-            foreignKey : "perfil_acesso_id",
-            as : "perfil_acesso"
+            foreignKey: "perfil_acesso_id",
+            as: "perfil_item_acesso"
+        })
+    }
+
+    static initModel(sequelize: Sequelize) {
+        Perfil_Acesso_Item.init({
+            perfil_acesso_id: DataTypes.INTEGER,
+            acao: DataTypes.STRING,
+            controller: DataTypes.STRING,
+            data_criacao: DataTypes.DATE,
+            data_modificacao: DataTypes.DATE,
+            usuario_criacao: DataTypes.INTEGER,
+            usuario_modificacao: DataTypes.INTEGER,
+        }, {
+            sequelize: sequelize,
+            tableName: "perfil_acesso_item",
+            timestamps: false
         })
     }
 }
 
-Perfil_Acesso_Item.init({
-    id: DataTypes.INTEGER,
-    perfil_acesso_id: DataTypes.INTEGER,
-    acao: DataTypes.STRING,
-    controller: DataTypes.STRING,
-    data_criacao: DataTypes.DATE,
-    data_modificação: DataTypes.DATE,
-    usuario_criacao: DataTypes.INTEGER,
-    usuario_modificacao: DataTypes.INTEGER,
-}, {
-    sequelize: db,
-    tableName: "perfil_acesso_item",
-    timestamps: false
-})
 
 export default Perfil_Acesso_Item

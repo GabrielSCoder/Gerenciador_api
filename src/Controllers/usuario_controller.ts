@@ -1,7 +1,9 @@
-import { criarUsuario, destroy, getById, update } from "../implementations/usuario_implementations";
+import { verificarPermissao } from "../implementations/perfil_acesso_implementations";
+import { criarUsuario, destroy, getallUsers, getById, update } from "../implementations/usuario_implementations";
 
 export async function createAsync (req : any, res : any) {
     try {
+        await verificarPermissao("usuario", "criar", req.headers.authorization)
         const func = await criarUsuario(req.body)
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
@@ -12,6 +14,15 @@ export async function createAsync (req : any, res : any) {
 export async function getAsync (req : any, res : any) {
     try {
         const func = await getById(req.params.id)
+        return res.status(200).json({success : true, dados : func})
+    } catch (error : any) {
+        return res.status(500).json({success : false, dados : error.message})
+    }
+}
+
+export async function getAllAsync (req : any, res : any) {
+    try {
+        const func = await getallUsers()
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
         return res.status(500).json({success : false, dados : error.message})
