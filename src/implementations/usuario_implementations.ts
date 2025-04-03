@@ -59,6 +59,7 @@ export async function getById(id: number) {
     if (!response) throw new Error("Não encontrado");
 
     return await convert(response);
+    // return response
 }
 
 async function getItem(id: number) {

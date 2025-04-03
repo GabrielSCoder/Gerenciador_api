@@ -60,7 +60,7 @@ async function getById(id: number) {
     return item
 }
 
-export async function getItem(id : number) {
+export async function getItem(id: number) {
     const item = await Perfil_Acesso.findByPk(id)
 
     if (!item) throw new Error("Não encontrado")
@@ -68,38 +68,47 @@ export async function getItem(id : number) {
     return item
 }
 
-export async function getAllUsersByPerfil (id : number) {
+export async function getAllUsersByPerfil(id: number) {
     await getById(id)
 
-    const list = await Usuario.findAll({ where : {
-        perfil_acesso_id : id
-    }})
+    const list = await Usuario.findAll({
+        where: {
+            perfil_acesso_id: id
+        }
+    })
 
     return list
 }
 
-export async function getAll () {
+export async function getAll() {
 
     const list = await Perfil_Acesso.findAll()
 
     return list
 }
 
-export async function getallPermissions (id : number) {
-    const list = await Perfil_Acesso_Item.findAll({where : {perfil_acesso_id : id }})
+export async function getallPermissions(id: number) {
+    const list = await Perfil_Acesso_Item.findAll({ where: { perfil_acesso_id: id } })
     return list
 }
 
-export async function verificarPermissao (controller : string, acao : string, token : string) {
+export async function verificarPermissao(controller: string, acao: string, token: string) {
 
+    console.log("----------------")
     const tkn = token.split(" ")[1]
-
     const decode = jwt.verify(tkn, process.env.ACCESS_KEY as string)
-
+    console.log(decode)
     if (typeof decode == "object" && "perfil" in decode) {
-        const check = await Perfil_Acesso_Item.findAll({where : {controller : controller, acao : acao.toUpperCase(), perfil_acesso_id : decode.perfil}})
-        if (check.length == 1) return;
+        const check = await Perfil_Acesso_Item.findAll({ where: { controller: controller, acao: acao.toUpperCase(), perfil_acesso_id: decode.perfil } })
+        console.log(check)
+        if (check.length == 1) {
+            return;
+        } else {
+            throw new Error("Ação não permitida com perfil atual")
+        }
+    } else {
+        throw new Error("Token carece de informação")
     }
 
-    throw new Error("Ação não permitida com perfil atual")
+
 }

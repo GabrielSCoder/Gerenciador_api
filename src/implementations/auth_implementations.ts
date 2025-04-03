@@ -63,7 +63,6 @@ export async function logout(req: any, data: loginForm, res: any) {
 }
 
 export function generateTokens(userId: number, perfilId : number) {
-    console.log("-----------", userId)
     const accessToken = jwt.sign({ id: userId, perfil : perfilId }, process.env.ACCESS_KEY as string, { expiresIn: "2hr" })
     const refreshToken = jwt.sign({ id: userId, perfil : perfilId,  criado: Date.now() }, process.env.REFRESH_KEY as string, { expiresIn: "5hr" })
 

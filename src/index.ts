@@ -2,9 +2,7 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import mainRoute from "./routes/main_route"
-import { createAdminUser } from "./implementations/usuario_implementations"
 
-// createAdminUser()
 
 const app = express()
 app.use(cors())

@@ -5,9 +5,9 @@ import { authCheck } from "../middlewares/authMiddleware"
 const usuarioRoute = express.Router()
 
 usuarioRoute.get("/meet", authCheck, testAsync)
-usuarioRoute.post("/", createAsync)
+usuarioRoute.post("/", authCheck, createAsync)
 usuarioRoute.get("/all", getAllAsync)
-usuarioRoute.get("/:id", getAsync)
+usuarioRoute.get("/:id", authCheck, getAsync)
 usuarioRoute.put("/", updateAsync)
 usuarioRoute.delete("/:id", destroyAsync)
 

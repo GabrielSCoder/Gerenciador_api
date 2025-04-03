@@ -17,7 +17,13 @@ export async function authCheck(req: any, res: any, next: any) {
         return res.status(401).json({ success: false, message: "requisição inválida (hmac não confere)" })
     }
 
-    const token = accessToken.split(' ')[1]
+    let token 
+
+    if (accessToken.split(' ')[1]) {
+        token = accessToken.split(' ')[1]
+    } else {
+        return res.status(500).json({ success: false, message: "Formato de token inválido" })
+    }
 
     try {
         const decode = jwt.verify(token, process.env.ACCESS_KEY as string)
@@ -34,7 +40,7 @@ export async function authCheck(req: any, res: any, next: any) {
             if (typeof decode == "object" && "id" in decode) {
                 const findSession = await Sessao.findOne({ where: { usuario_id: decode.id } })
                 if (findSession && findSession.hmac == hmac || findSession && refreshToken == findSession.token) {
-                    const { accessToken } = generateTokens(decode.id, decode.perfilId)
+                    const { accessToken } = generateTokens(decode.id, decode.perfil)
                     return res.status(202).json({ success: false, token: accessToken })
                 } else if (!findSession) {
                     return res.status(401).json({ success: false, message: "Sessão não encontrada" })

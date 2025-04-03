@@ -5,7 +5,7 @@ import { sessaoForm } from "../types/sessao";
 export async function checarSessao (id : number) {
     const check = await Sessao.findByPk(id)
 
-    if(!check) throw new Error("Sessão não econtrada")
+    if(!check) throw new Error("Sessão não encontrada")
 
     return check
 }
