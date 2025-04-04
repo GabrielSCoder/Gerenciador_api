@@ -15,10 +15,12 @@ const sequelize = new Sequelize(
 import Perfil_Acesso from "./perfil_acesso";
 import Usuario from "./usuario";
 import Perfil_Acesso_Item from "./perfil_acesso_item";
+import Cliente from "./cliente";
 
 Perfil_Acesso_Item.initModel(sequelize)
-Perfil_Acesso.initModel(sequelize);
-Usuario.initModel(sequelize);
+Perfil_Acesso.initModel(sequelize)
+Usuario.initModel(sequelize)
+Cliente.initModel(sequelize)
 
 const db: any = {
   Usuario,

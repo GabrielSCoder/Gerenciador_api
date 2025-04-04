@@ -94,21 +94,25 @@ export async function getallPermissions(id: number) {
 
 export async function verificarPermissao(controller: string, acao: string, token: string) {
 
-    console.log("----------------")
-    const tkn = token.split(" ")[1]
-    const decode = jwt.verify(tkn, process.env.ACCESS_KEY as string)
-    console.log(decode)
-    if (typeof decode == "object" && "perfil" in decode) {
-        const check = await Perfil_Acesso_Item.findAll({ where: { controller: controller, acao: acao.toUpperCase(), perfil_acesso_id: decode.perfil } })
-        console.log(check)
-        if (check.length == 1) {
-            return;
-        } else {
-            throw new Error("Ação não permitida com perfil atual")
-        }
-    } else {
-        throw new Error("Token carece de informação")
-    }
+    try {
+        const tkn = token.split(" ")[1]
+        const decode = jwt.verify(tkn, process.env.ACCESS_KEY as string)
+        if (typeof decode == "object" && "perfil" in decode) {
+            const check = await Perfil_Acesso_Item.findAll({ where: { controller: controller, acao: acao.toUpperCase(), perfil_acesso_id: decode.perfil } })
+          
+            if (check.length == 0) {
+          
+                throw new Error("Ação não permitida com perfil atual")
+            }
 
+            return decode
+
+        } else {
+            throw new Error("Token carece de informação")
+        }
+
+    } catch (error: any) {
+        throw new Error(error.message || "Token invalido")
+    }
 
 }
