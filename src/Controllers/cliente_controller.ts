@@ -1,4 +1,4 @@
-import { criarCliente, destroy, getallClients, getById, update, getClientsByFilter } from "../implementations/cliente_implementations"
+import { criarCliente, destroy, getallClients, getById, update, getClientsByFilter, getClienteSelect } from "../implementations/cliente_implementations"
 import { verificarPermissao } from "../implementations/perfil_acesso_implementations"
 
 export async function createAsync (req : any, res : any) {
@@ -13,7 +13,7 @@ export async function createAsync (req : any, res : any) {
 
 export async function updateAsync (req : any, res : any) {
     try {
-        const token = await verificarPermissao("cliente", "criar", req.headers.authorization)
+        const token = await verificarPermissao("cliente", "editar", req.headers.authorization)
         const func = await update(req.body, token.id)
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
@@ -23,13 +23,24 @@ export async function updateAsync (req : any, res : any) {
 
 export async function getPagination (req : any, res : any) {
     try {
-        // const token = await verificarPermissao("cliente", "criar", req.headers.authorization)
+        await verificarPermissao("cliente", "listar", req.headers.authorization)
         const func = await getClientsByFilter(req.body)
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
         return res.status(500).json({sucess : false, dados : error.message})
     }
 }
+
+export async function getAllSelect (req : any, res : any) {
+    try {
+        await verificarPermissao("cliente", "listar", req.headers.authorization)
+        const func = await getClienteSelect()
+        return res.status(200).json({success : true, dados : func})
+    } catch (error : any) {
+        return res.status(500).json({success : false, dados : error.message})
+    }
+}
+
 
 export async function getAsync (req : any, res : any) {
     try {
@@ -51,10 +62,9 @@ export async function getAllAsync (req : any, res : any) {
     }
 }
 
-
 export async function deleteAsync (req : any, res : any) {
     try {
-        await verificarPermissao("cliente", "listar", req.headers.authorization)
+        await verificarPermissao("cliente", "deletar", req.headers.authorization)
         const func = await destroy(req.params.id)
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {

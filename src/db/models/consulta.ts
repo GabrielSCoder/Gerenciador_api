@@ -1,5 +1,4 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import Cliente from "./cliente";
 
 class Consulta extends Model {
     declare id: number
@@ -14,7 +13,7 @@ class Consulta extends Model {
     declare usuario_modificacao: number
 
     static associate(models: any) {
-        Cliente.belongsTo(models.Usuario, {
+        Consulta.belongsTo(models.Cliente, {
             foreignKey: "cliente_id",
             as: "cliente"
         });

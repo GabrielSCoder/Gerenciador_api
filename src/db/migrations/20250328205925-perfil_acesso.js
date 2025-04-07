@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false, type: Sequelize.STRING
       },
       ativo: {
-        allowNull: false, type: Sequelize.BOOLEAN
+        allowNull: false, type: Sequelize.BOOLEAN, defaultValue : true
       },
       descricao: {
         allowNull: true, type: Sequelize.STRING

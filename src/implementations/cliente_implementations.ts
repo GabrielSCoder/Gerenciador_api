@@ -9,6 +9,13 @@ async function validar(data: clienteForm) {
     if (!data.nome || !data.endereco || !data.numero)
         throw new Error("Dados obrigatórios")
 
+    if (data.indentificacao) {
+        const resp = await Cliente.findOne({where : {indentificacao : data.indentificacao}})
+        if (resp) {
+            throw new Error("Indentificação já cadastrada")
+        }
+    }
+
 }
 
 async function validarUpdate(data: clienteForm & { id : number}) {
@@ -30,6 +37,8 @@ async function convert(data: any) {
         endereco : data.endereco,
         numero : data.numero,
         indentificacao : data.indentificacao ?? "",
+        telefone : data.telefone,
+        telefone2 : data.telefone2,
         data_criacao: data.data_criacao,
         perfil_acesso_id: data.perfil_acesso_id,
         perfil_acesso_usuario: data.perfil_acesso_usuario
@@ -41,7 +50,7 @@ async function convert(data: any) {
 export async function criarCliente(data: clienteForm, id : number) {
     await validar(data)
 
-    const response = await Cliente.create({ ...data, data_criacao: Date.now(), usuario_criacao : id })
+    const response = await Cliente.create({ ...data, data_criacao: Date.now(), usuario_criacao : id})
 
     if (!response) throw new Error("Erro na criação")
 
@@ -50,12 +59,7 @@ export async function criarCliente(data: clienteForm, id : number) {
 
 export async function getById(id: number) {
     const response = await Cliente.findOne({
-        where: { id: id },
-        include: [{
-            model: Usuario,
-            as: "cliente_usuario",
-            attributes: ["nome", "id"]
-        }]
+        where: { id: id }
     });
 
     if (!response) throw new Error("Não encontrado");
@@ -120,13 +124,10 @@ export async function getClientsByFilter (filter: clientFilter) {
                     { indentificacao: { [Op.iLike]: `%${filter.pesquisa}%` } }
                 ]
             },
-            limit : filter.tamanhoPagina,
-            offset : (filter.numeroPagina - 1) * filter.tamanhoPagina,
             order : [[Sequelize.literal("data_criacao"), "DESC"]]
         },
     )
     
-
     const nSegments = Math.ceil(lista.length / filter.tamanhoPagina)
 
     if (nSegments != filter.numeroPagina) {
@@ -146,4 +147,12 @@ export async function getClientsByFilter (filter: clientFilter) {
     }
 
     return item
+}
+
+export async function getClienteSelect() {
+    const list = await Cliente.findAll()
+
+    const convertList = list.map((value) => { return { id : value.id, nome : value.nome }})
+
+    return convertList
 }

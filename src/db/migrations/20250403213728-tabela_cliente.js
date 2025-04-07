@@ -25,8 +25,21 @@ module.exports = {
       },
       indentificacao : {
         type : Sequelize.STRING,
+        allowNull : true,
+        unique : true
+      },
+      telefone : {
+        type : Sequelize.STRING,
         allowNull : true
       },
+      telefone2 : {
+        type : Sequelize.STRING,
+        allowNull : true
+      },
+      data_nascimento : {
+        type : Sequelize.DATEONLY,
+        allowNull : true
+      }, 
       data_criacao : {
         type : Sequelize.DATE,
         allowNull : false

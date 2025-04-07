@@ -14,7 +14,7 @@ mainRoute.use("/usuario", usuarioRoute)
 mainRoute.use("/sessao", sessaoRoute)
 mainRoute.use("/perfil_acesso", perfil_acessoRoute)
 mainRoute.use("/perfil_acesso_item", perfil_acesso_itemRoute)
-// mainRoute.use("/cliente", clienteRoute)
+mainRoute.use("/cliente", clienteRoute)
 mainRoute.use("/consulta", consultaroute)
 
 export default mainRoute

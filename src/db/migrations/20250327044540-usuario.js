@@ -23,6 +23,15 @@ module.exports = {
         type : Sequelize.STRING,
         allowNull : false
       },
+      ativo : {
+        type : Sequelize.BOOLEAN,
+        allowNull : false,
+        defaultValue : true
+      },
+      data_nascimento : {
+        type : Sequelize.DATEONLY,
+        allowNull : true
+      }, 
       data_criacao : {
         type : Sequelize.DATE,
         allowNull : false

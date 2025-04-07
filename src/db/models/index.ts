@@ -28,8 +28,8 @@ const db: any = {
   Usuario,
   Perfil_Acesso,
   Perfil_Acesso_Item,
-  Cliente,
-  Consulta
+  Consulta,
+  Cliente
 };
 
 

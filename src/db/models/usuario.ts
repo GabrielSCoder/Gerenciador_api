@@ -7,6 +7,8 @@ class Usuario extends Model {
     declare nome: string;
     declare email: string;
     declare senha: string;
+    declare data_nascimento : Date;
+
 
     check(password: string): boolean {
         return bcrypt.compareSync(password, this.senha);
@@ -17,8 +19,10 @@ class Usuario extends Model {
         Usuario.belongsTo(models.Perfil_Acesso, {
             foreignKey: "perfil_acesso_id",
             as: "perfil_acesso_usuario"
-        });       
+        });
+               
     }
+
 
     static initModel(sequelize: Sequelize) {
         Usuario.init(
@@ -27,6 +31,7 @@ class Usuario extends Model {
                 senha: DataTypes.STRING,
                 email: DataTypes.STRING,
                 perfil_acesso_id: DataTypes.INTEGER,
+                data_nascimento : DataTypes.DATEONLY,
                 data_criacao: DataTypes.DATE,
                 data_modificacao: DataTypes.DATE
             },
