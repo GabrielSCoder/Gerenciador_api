@@ -9,6 +9,13 @@ class Cliente extends Model {
     declare usuario_criacao : number
     declare usuario_modificacao : number
 
+    static associate(models: any) { 
+        Cliente.hasMany(models.Consulta, {
+            foreignKey : "cliente_id",
+            as : "consultas"
+        })
+    }
+
     static initModel(sequelize: Sequelize) {
         Cliente.init(
             {

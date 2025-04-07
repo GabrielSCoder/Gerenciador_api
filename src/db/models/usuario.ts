@@ -1,6 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
-import db from ".";
 
 class Usuario extends Model {
     declare id: number;
@@ -14,10 +13,11 @@ class Usuario extends Model {
     }
 
     static associate(models: any) {
+
         Usuario.belongsTo(models.Perfil_Acesso, {
             foreignKey: "perfil_acesso_id",
             as: "perfil_acesso_usuario"
-        });
+        });       
     }
 
     static initModel(sequelize: Sequelize) {

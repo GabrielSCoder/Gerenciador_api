@@ -16,16 +16,20 @@ import Perfil_Acesso from "./perfil_acesso";
 import Usuario from "./usuario";
 import Perfil_Acesso_Item from "./perfil_acesso_item";
 import Cliente from "./cliente";
+import Consulta from "./consulta";
 
 Perfil_Acesso_Item.initModel(sequelize)
 Perfil_Acesso.initModel(sequelize)
 Usuario.initModel(sequelize)
 Cliente.initModel(sequelize)
+Consulta.InitModel(sequelize)
 
 const db: any = {
   Usuario,
   Perfil_Acesso,
-  Perfil_Acesso_Item
+  Perfil_Acesso_Item,
+  Cliente,
+  Consulta
 };
 
 

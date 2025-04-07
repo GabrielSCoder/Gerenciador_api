@@ -95,7 +95,16 @@ export async function getallPermissions(id: number) {
 export async function verificarPermissao(controller: string, acao: string, token: string) {
 
     try {
-        const tkn = token.split(" ")[1]
+        
+        let tkn
+
+        if (typeof token == "undefined") {
+            throw new Error("token invalido")
+        }
+        
+        tkn = token.split(" ")[1]
+
+        console.log(tkn)
         const decode = jwt.verify(tkn, process.env.ACCESS_KEY as string)
         if (typeof decode == "object" && "perfil" in decode) {
             const check = await Perfil_Acesso_Item.findAll({ where: { controller: controller, acao: acao.toUpperCase(), perfil_acesso_id: decode.perfil } })

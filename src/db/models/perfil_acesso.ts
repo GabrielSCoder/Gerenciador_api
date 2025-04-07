@@ -1,5 +1,4 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import db from ".";
 
 class Perfil_Acesso extends Model {
     declare id: number;
@@ -12,6 +11,7 @@ class Perfil_Acesso extends Model {
     declare usuario_modificacao: number;
 
     static associate(models: any) {
+        
         Perfil_Acesso.hasMany(models.Usuario, {
             foreignKey: "perfil_acesso_id",
             as: "perfil_acesso_usuario"

@@ -5,6 +5,7 @@ import express from "express"
 import perfil_acessoRoute from "./perfil_acesso_route";
 import perfil_acesso_itemRoute from "./perfil_acesso_item_route";
 import clienteRoute from "./cliente_route";
+import consultaroute from "./consulta";
 
 const mainRoute = express.Router()
 
@@ -13,6 +14,7 @@ mainRoute.use("/usuario", usuarioRoute)
 mainRoute.use("/sessao", sessaoRoute)
 mainRoute.use("/perfil_acesso", perfil_acessoRoute)
 mainRoute.use("/perfil_acesso_item", perfil_acesso_itemRoute)
-mainRoute.use("/cliente", clienteRoute)
+// mainRoute.use("/cliente", clienteRoute)
+mainRoute.use("/consulta", consultaroute)
 
 export default mainRoute
