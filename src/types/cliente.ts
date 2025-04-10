@@ -9,6 +9,10 @@ export type clienteForm = {
 
 export type clientFilter = {
     pesquisa ?: string
+    dataInicio ?: string
+    dataFim ?: string
+    criador ?: number
+    ordem ?: "ascendente" | "descrecente"
     tamanhoPagina : number
     numeroPagina : number
 }

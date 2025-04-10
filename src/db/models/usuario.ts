@@ -20,6 +20,16 @@ class Usuario extends Model {
             foreignKey: "perfil_acesso_id",
             as: "perfil_acesso_usuario"
         });
+
+        Usuario.hasMany(models.Cliente, {
+            foreignKey : "usuario_criacao",
+            as : "usuario_criador"
+        })
+
+        Usuario.hasMany(models.Cliente, {
+            foreignKey : "usuario_modificacao",
+            as : "usuario_modificador"
+        })
                
     }
 

@@ -18,6 +18,16 @@ class Cliente extends Model {
             foreignKey : "cliente_id",
             as : "consultas"
         })
+
+        Cliente.belongsTo(models.Usuario, {
+            foreignKey : "usuario_criacao",
+            as : "usuario_criador"
+        })
+
+        Cliente.belongsTo(models.Usuario, {
+            foreignKey : "usuario_modificacao",
+            as : "usuario_modificador"
+        })
     }
 
     static initModel(sequelize: Sequelize) {
