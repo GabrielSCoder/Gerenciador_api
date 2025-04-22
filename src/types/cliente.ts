@@ -12,7 +12,8 @@ export type clientFilter = {
     dataInicio ?: string
     dataFim ?: string
     criador ?: number
-    ordem ?: "ascendente" | "descrecente"
+    ordem ?: "ASC" | "DESC"
+    modificador ?: "nome" | "data_criacao" | "data_modificacao"
     tamanhoPagina : number
     numeroPagina : number
 }

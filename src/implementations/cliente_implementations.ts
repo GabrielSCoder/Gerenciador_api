@@ -149,7 +149,7 @@ export async function getClientsByFilter(filter: clientFilter) {
         {
             where: whereConditions,
             include: [{ model: Usuario, as: "usuario_criador", attributes: ["id", "nome"] }],
-            order: [[Sequelize.literal("data_criacao"), filter.ordem ? filter.ordem == "ascendente" ? "ASC" : "DESC" : "DESC"]]
+            order: [[Sequelize.literal(filter.modificador ? filter.modificador : "data_criacao"), filter.ordem ? filter.ordem : "DESC"]]
         },
     )
 
