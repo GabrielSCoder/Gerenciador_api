@@ -92,6 +92,11 @@ export async function getallPermissions(id: number) {
     return list
 }
 
+export async function criarPerfilADM () {
+    const create = await Perfil_Acesso.create({nome : "ADM", "descricao" : "Administrador", ativo : true, data_criacao: Date.now()})
+    return create.id
+}
+
 export async function verificarPermissao(controller: string, acao: string, token: string) {
 
     try {

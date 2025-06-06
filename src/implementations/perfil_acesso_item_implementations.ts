@@ -1,6 +1,7 @@
 import Perfil_Acesso from "../db/models/perfil_acesso";
 import Perfil_Acesso_Item from "../db/models/perfil_acesso_item";
 import { perfilAcessoItemForm } from "../types/perfil_acesso";
+import { permissoes } from "../utils/permissoes";
 
 
 async function validar(data: perfilAcessoItemForm) {
@@ -81,4 +82,21 @@ export async function getAll () {
     const list = await Perfil_Acesso_Item.findAll()
 
     return list
+}
+
+export async function criarPermissoesParaAdmin() {
+
+    const perfilAcessoId = 1
+
+    const promises = permissoes.controllers.flatMap(controller =>
+        permissoes.permissoes.map(acao =>
+            criar({ controller, acao, perfil_acesso_id: perfilAcessoId })
+                .then(() => console.log(`Criado: ${controller} - ${acao}`))
+                .catch(err => console.error(`Erro: ${controller} - ${acao}`, err))
+        )
+    )
+
+    await Promise.all(promises)
+
+    return true
 }

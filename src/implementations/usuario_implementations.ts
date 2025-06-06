@@ -138,12 +138,13 @@ export async function update(data: usuarioFormularioResponse) {
         ...data,
         data_modificacao: Date.now()
     }, {
-        where: { id: data.id }
+        where: { id: data.id },
+        individualHooks : true
     })
 
     if (!update) throw new Error("Erro na atualização")
 
-    return update
+    return true
 }
 
 export async function destroy(id: number) {
@@ -161,7 +162,8 @@ export async function createAdminUser() {
     const data = {
         nome: "ADMIN",
         senha: "123123",
-        email: "dev@test.com"
+        email: "dev@test.com",
+        perfil_acesso_id : 1
     }
 
     const response = await Usuario.create({ ...data, data_criacao: Date.now() })

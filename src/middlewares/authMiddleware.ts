@@ -9,12 +9,16 @@ export async function authCheck(req: any, res: any, next: any) {
     const refreshToken = req.cookies.rfssid as string
     const hmac = req.headers.hmac as string
 
-    if (!refreshToken || !hmac || !accessToken || accessToken && !accessToken.includes("Bearer") || !refreshToken) {
-        return res.status(401).json({ success: false, message: "requisição inválida (cabeçalho incompleto)" })
-    }
+    // if (!refreshToken || !hmac || !accessToken || accessToken && !accessToken.includes("Bearer") || !refreshToken) {
+    //     return res.status(401).json({ success: false, message: "requisição inválida (cabeçalho incompleto)" })
+    // }
 
-    if (process.env.HMAC as string != hmac) {
-        return res.status(401).json({ success: false, message: "requisição inválida (hmac não confere)" })
+    // if (process.env.HMAC as string != hmac) {
+    //     return res.status(401).json({ success: false, message: "requisição inválida (hmac não confere)" })
+    // }
+
+    if (!accessToken) {
+        return res.status(401).json({ success: false, message: "requisição inválida (cabeçalho incompleto)" })
     }
 
     let token 

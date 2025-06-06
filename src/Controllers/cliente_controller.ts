@@ -23,7 +23,7 @@ export async function updateAsync (req : any, res : any) {
 
 export async function getPagination (req : any, res : any) {
     try {
-        await verificarPermissao("cliente", "listar", req.headers.authorization)
+        // await verificarPermissao("cliente", "listar", req.headers.authorization)
         const func = await getClientsByFilter(req.body)
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
@@ -54,7 +54,7 @@ export async function getAsync (req : any, res : any) {
 
 export async function getAllAsync (req : any, res : any) {
     try {
-        await verificarPermissao("cliente", "listar", req.headers.authorization)
+        // await verificarPermissao("cliente", "listar", req.headers.authorization)
         const func = await getallClients()
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {

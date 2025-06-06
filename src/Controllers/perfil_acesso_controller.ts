@@ -1,4 +1,4 @@
-import { criar, getItem, deletar, editar, getAll, getallPermissions } from "../implementations/perfil_acesso_implementations"
+import { criar, getItem, deletar, editar, getAll, getallPermissions, criarPerfilADM } from "../implementations/perfil_acesso_implementations"
 
 export async function createAsync (req : any, res : any) {
     try {
@@ -48,7 +48,17 @@ export async function getPermissionsAsync (req : any, res : any) {
 
 export async function deleteAsync (req : any, res : any) {
     try {
-        const func = await deletar(req.body)
+        const func = await deletar(req.params.id)
+        return res.status(200).json({success : true, dados : func})
+    } catch (error : any) {
+        return res.status(500).json({sucess : false, dados : error.message})
+    }
+}
+
+
+export async function createADM (req : any, res : any) {
+    try {
+        const func = await criarPerfilADM()
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
         return res.status(500).json({sucess : false, dados : error.message})
