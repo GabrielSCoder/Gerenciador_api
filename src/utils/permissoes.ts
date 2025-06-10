@@ -13,7 +13,12 @@ export const permissaoPerfilAcessoItem = {
     permissoes : ["EDITAR", "CRIAR", "EXCLUIR", "DELETAR", "LISTAR"]
 }
 
-export const permissoes = {
+export const permissoesAdmin = {
     controllers : ["usuario", "cliente", "perfil_acesso", "perfil_acesso_item", "consulta"],
+    permissoes : ["EDITAR", "CRIAR", "EXCLUIR", "DELETAR", "LISTAR"]
+}
+
+export const permissoesColaborador = {
+    controllers : ["cliente", "consulta"],
     permissoes : ["EDITAR", "CRIAR", "EXCLUIR", "DELETAR", "LISTAR"]
 }

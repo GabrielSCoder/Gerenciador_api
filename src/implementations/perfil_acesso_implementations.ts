@@ -92,29 +92,34 @@ export async function getallPermissions(id: number) {
     return list
 }
 
-export async function criarPerfilADM () {
-    const create = await Perfil_Acesso.create({nome : "ADM", "descricao" : "Administrador", ativo : true, data_criacao: Date.now()})
+export async function criarPerfilADM() {
+    const create = await Perfil_Acesso.create({ nome: "ADM", "descricao": "Administrador", ativo: true, data_criacao: Date.now() })
+    return create.id
+}
+
+export async function CriarPerfilColPadrao() {
+    const create = await Perfil_Acesso.create({ nome: "Colaborador", "descricao": "Faz Tudo", ativo: true, data_criacao: Date.now() })
     return create.id
 }
 
 export async function verificarPermissao(controller: string, acao: string, token: string) {
 
     try {
-        
+
         let tkn
 
         if (typeof token == "undefined") {
             throw new Error("token invalido")
         }
-        
+
         tkn = token.split(" ")[1]
-        
+
         const decode = jwt.verify(tkn, process.env.ACCESS_KEY as string)
         if (typeof decode == "object" && "perfil" in decode) {
             const check = await Perfil_Acesso_Item.findAll({ where: { controller: controller, acao: acao.toUpperCase(), perfil_acesso_id: decode.perfil } })
-          
+
             if (check.length == 0) {
-          
+
                 throw new Error("Ação não permitida com perfil atual")
             }
 

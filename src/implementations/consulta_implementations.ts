@@ -6,9 +6,20 @@ import { consultaForm, consultaPagination } from "../types/consulta";
 
 
 async function validar(data: consultaForm) {
-    if (!data.descricao || !data.preco || !data.cliente_id)
-        throw new Error("Dados obrigatórios")
+    const erros: string[] = [];
 
+    if (!data.descricao) erros.push("Descrição obrigatória!");
+    if (!data.preco) erros.push("Preço obrigatório!");
+    if (!data.cliente_id) erros.push("Paciente obrigatório!");
+    if (!data.tipo) erros.push("Tipo obrigatório!");
+    if (!data.procedimento) erros.push("Procedimento obrigatório!");
+    if (!data.forma_pagamento) erros.push("Forma de pagamento obrigatória!");
+    if (!data.data_criacao) erros.push("Data de criação obrigatória!");
+    if (!data.profissional_id) erros.push("Profissional responsável obrigatório!");
+
+    if (erros.length > 0) {
+        throw new Error(erros.join(" | "));
+    }
 }
 
 async function validarUpdate(data: consultaForm & { id : number}) {

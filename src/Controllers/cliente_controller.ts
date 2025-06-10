@@ -34,7 +34,7 @@ export async function getPagination (req : any, res : any) {
 export async function getAllSelect (req : any, res : any) {
     try {
         await verificarPermissao("cliente", "listar", req.headers.authorization)
-        const func = await getClienteSelect()
+        const func = await getClienteSelect(req.body)
         return res.status(200).json({success : true, dados : func})
     } catch (error : any) {
         return res.status(500).json({success : false, dados : error.message})

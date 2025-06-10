@@ -5,7 +5,7 @@ import express from "express"
 import perfil_acessoRoute from "./perfil_acesso_route";
 import perfil_acesso_itemRoute from "./perfil_acesso_item_route";
 import clienteRoute from "./cliente_route";
-import consultaroute from "./consulta";
+import consultaroute from "./consulta_route";
 
 const mainRoute = express.Router()
 

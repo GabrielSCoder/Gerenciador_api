@@ -30,6 +30,11 @@ class Usuario extends Model {
             foreignKey : "usuario_modificacao",
             as : "usuario_modificador"
         })
+
+        Usuario.hasMany(models.Consulta, {
+            foreignKey : "profissional_id",
+            as : "usuario_profissional"
+        })
                
     }
 

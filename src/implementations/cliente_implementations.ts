@@ -41,6 +41,7 @@ async function convert(data: any) {
         telefone: data.telefone,
         telefone2: data.telefone2,
         data_criacao: data.data_criacao,
+        data_nascimento : data.data_nascimento,
         perfil_acesso_id: data.perfil_acesso_id,
         perfil_acesso_usuario: data.perfil_acesso_usuario
     }
@@ -148,7 +149,7 @@ export async function getClientsByFilter(filter: clientFilter) {
     const lista = await Cliente.findAll(
         {
             where: whereConditions,
-            include: [{ model: Usuario, as: "usuario_criador", attributes: ["id", "nome"] }],
+            include: [{ model: Usuario, as: "usuario_criador", attributes: ["id", "nome"] }, {model : Usuario, as : "usuario_modificador", attributes : ["id", "nome"]}],
             order: [[Sequelize.literal(filter.modificador ? filter.modificador : "data_criacao"), filter.ordem ? filter.ordem : "DESC"]]
         },
     )
@@ -175,8 +176,15 @@ export async function getClientsByFilter(filter: clientFilter) {
     return item
 }
 
-export async function getClienteSelect() {
-    const list = await Cliente.findAll()
+
+export async function getClienteSelect(filter : clientFilter) {
+    const list = await Cliente.findAll({
+        where: {
+            [Op.or]: [
+                { nome: { [Op.iLike]: `%${filter.pesquisa}%` } }
+            ]
+        }
+    })
 
     const convertList = list.map((value) => { return { id: value.id, nome: value.nome } })
 

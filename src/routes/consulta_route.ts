@@ -3,7 +3,7 @@ import {createAsync, destroyAsync, getAllAsync, getAsync, getPagination} from ".
 
 const consultaroute = express.Router()
 
-consultaroute.get("/", createAsync)
+consultaroute.post("/", createAsync)
 consultaroute.get("/all", getAllAsync)
 consultaroute.post("/pagination", getPagination)
 consultaroute.get("/:id", getAsync)

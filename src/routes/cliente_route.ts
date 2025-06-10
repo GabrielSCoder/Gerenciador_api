@@ -6,7 +6,7 @@ const clienteRoute = express.Router()
 
 clienteRoute.post("/", createAsync)
 clienteRoute.get("/all", getAllAsync)
-clienteRoute.get("/select", getAllSelect)
+clienteRoute.post("/select", getAllSelect)
 clienteRoute.get("/:id", getAsync)
 clienteRoute.put("/", updateAsync)
 clienteRoute.post("/pagination", authCheck, getPagination)

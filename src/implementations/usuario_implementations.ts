@@ -81,15 +81,21 @@ export async function getallUsers() {
     return convertList
 }
 
-export async function getUserSelect() {
-    const list = await Usuario.findAll()
+export async function getUserSelect(filter : clientFilter) {
+    const list = await Usuario.findAll({
+        where: {
+            [Op.or]: [
+                { nome: { [Op.iLike]: `%${filter.pesquisa}%` } }
+            ]
+        }
+    })
 
-    const convertList = list.map((value) => { return { id : value.id, nome : value.nome }})
+    const convertList = list.map((value) => { return { id: value.id, nome: value.nome } })
 
     return convertList
 }
 
-export async function getUsersByFilter (filter: clientFilter) {
+export async function getUsersByFilter(filter: clientFilter) {
 
     var list
 
@@ -102,12 +108,12 @@ export async function getUsersByFilter (filter: clientFilter) {
                     { indentificacao: { [Op.iLike]: `%${filter.pesquisa}%` } }
                 ]
             },
-            limit : filter.tamanhoPagina,
-            offset : (filter.numeroPagina - 1) * filter.tamanhoPagina,
-            order : [[Sequelize.literal("data_criacao"), "DESC"]]
+            limit: filter.tamanhoPagina,
+            offset: (filter.numeroPagina - 1) * filter.tamanhoPagina,
+            order: [[Sequelize.literal("data_criacao"), "DESC"]]
         },
     )
-    
+
 
     const nSegments = Math.ceil(lista.length / filter.tamanhoPagina)
 
@@ -139,7 +145,7 @@ export async function update(data: usuarioFormularioResponse) {
         data_modificacao: Date.now()
     }, {
         where: { id: data.id },
-        individualHooks : true
+        individualHooks: true
     })
 
     if (!update) throw new Error("Erro na atualização")
@@ -163,7 +169,7 @@ export async function createAdminUser() {
         nome: "ADMIN",
         senha: "123123",
         email: "dev@test.com",
-        perfil_acesso_id : 1
+        perfil_acesso_id: 1
     }
 
     const response = await Usuario.create({ ...data, data_criacao: Date.now() })

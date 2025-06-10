@@ -2,71 +2,106 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable("consulta", {
-      id : {
-        type : Sequelize.INTEGER,
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      descricao: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      preco: {
+        type: Sequelize.DECIMAL,
+        allowNull: false
+      },
+      cliente_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "cliente",
+          key: "id"
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+      },
+      status: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 1
+      },
+      horario: {
+        type: Sequelize.DATE,
+        unique: true,
+        allowNull: true
+      },
+      tipo: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      dente_afetado: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      procedimento: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      forma_pagamento: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      data_criacao: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      data_modificacao: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
+      pago : {
+        type: Sequelize.BOOLEAN,
         allowNull : false,
-        primaryKey : true,
-        autoIncrement : true
+        defaultValue : false
       },
-      descricao : {
-        type : Sequelize.STRING,
-        allowNull : false
+      observacoes : {
+        type : Sequelize.TEXT,
+        allowNull : true
       },
-      preco : {
-        type : Sequelize.DECIMAL,
-        allowNull : false
-      },
-      cliente_id : {
+      profissional_id : {
         type : Sequelize.INTEGER,
         allowNull : false,
         references : {
-          model : "cliente",
+          model : "usuario",
           key : "id"
         },
-        onDelete : "CASCADE",
         onUpdate : "CASCADE"
       },
-      cancelado : {
-        type : Sequelize.BOOLEAN,
-        allowNull : true
-      },
-      horario : {
-        type : Sequelize.DATE,
-        unique : true,
-        allowNull : true
-      },
-      data_criacao : {
-        type : Sequelize.DATE,
-        allowNull : false
-      },
-      data_modificacao : {
-        type : Sequelize.DATE,
-        allowNull : true
-      },
-      usuario_criacao : {
-        type : Sequelize.INTEGER,
-        allowNull : false,
-        references : {
+      usuario_criacao: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
           model: "usuario",
-          key : "id"
+          key: "id"
         },
-        onUpdate : "CASCADE"
+        onUpdate: "CASCADE"
       },
-      usuario_modificacao : {
-        type : Sequelize.INTEGER,
-        allowNull : true,
-        references : {
+      usuario_modificacao: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
           model: "usuario",
-          key : "id"
+          key: "id"
         },
-        onUpdate : "CASCADE"
+        onUpdate: "CASCADE"
       }
     })
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("consulta")
   }
 };
