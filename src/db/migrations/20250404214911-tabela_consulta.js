@@ -29,13 +29,12 @@ module.exports = {
         onUpdate: "CASCADE"
       },
       status: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        defaultValue: 1
+        type: Sequelize.ENUM("marcada", "concluida", "cancelada"),
+        allowNull: false
       },
       horario: {
         type: Sequelize.DATE,
-        unique: true,
+        unique: false,
         allowNull: true
       },
       tipo: {
@@ -62,23 +61,23 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true
       },
-      pago : {
+      pago: {
         type: Sequelize.BOOLEAN,
-        allowNull : false,
-        defaultValue : false
+        allowNull: false,
+        defaultValue: false
       },
-      observacoes : {
-        type : Sequelize.TEXT,
-        allowNull : true
+      observacoes: {
+        type: Sequelize.TEXT,
+        allowNull: true
       },
-      profissional_id : {
-        type : Sequelize.INTEGER,
-        allowNull : false,
-        references : {
-          model : "usuario",
-          key : "id"
+      profissional_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "usuario",
+          key: "id"
         },
-        onUpdate : "CASCADE"
+        onUpdate: "CASCADE"
       },
       usuario_criacao: {
         type: Sequelize.INTEGER,

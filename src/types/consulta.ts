@@ -6,7 +6,6 @@ export type consultaForm = {
     procedimento: string;
     forma_pagamento: string;
     profissional_id: number;
-    data_criacao: Date;
     horario?: Date;
     cancelado?: boolean;
     dente_afetado?: string;
@@ -20,5 +19,5 @@ export type consultaPagination = {
     quantidade: number,
     pagina: number,
     numeroPaginas: number,
-    listaClientes: Array<any>
+    listaConsultas: Array<any>
 }

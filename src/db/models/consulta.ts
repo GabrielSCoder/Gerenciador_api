@@ -17,6 +17,7 @@ class Consulta extends Model {
     declare data_modificacao: Date
     declare usuario_criacao: number
     declare usuario_modificacao: number
+    declare profissional_id : number
 
     static associate(models: any) {
         Consulta.belongsTo(models.Cliente, {
@@ -38,7 +39,7 @@ class Consulta extends Model {
             horario: DataTypes.DATE,
             cliente_id : DataTypes.INTEGER,
             profissional_id : DataTypes.INTEGER,
-            status : DataTypes.INTEGER,
+            status : DataTypes.ENUM("marcada", "concluida", "cancelada"),
             dente_afetado : DataTypes.TEXT,
             forma_pagamento : DataTypes.TEXT,
             pago : DataTypes.BOOLEAN,
