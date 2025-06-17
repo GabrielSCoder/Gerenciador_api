@@ -21,3 +21,18 @@ export type consultaPagination = {
     numeroPaginas: number,
     listaConsultas: Array<any>
 }
+
+export type consultaFilter = {
+    pesquisa ?: string
+    dataCadastroInicio ?: string
+    dataCadastroFim ?: string
+    horarioInicio ?: string
+    horarioFim ?: string
+    criador ?: number
+    cliente ?: number
+    profissional ?: number
+    ordem ?: "ASC" | "DESC"
+    modificador ?: "nome" | "data_criacao" | "data_modificacao"
+    tamanhoPagina : number
+    numeroPagina : number
+}

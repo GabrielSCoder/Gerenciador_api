@@ -2,9 +2,12 @@ import { Op, Sequelize } from "sequelize";
 import Cliente from "../db/models/cliente";
 import { clientFilter } from "../types/cliente";
 import Consulta from "../db/models/consulta";
-import { consultaForm, consultaPagination } from "../types/consulta";
-import { baseDate } from "../types/paginacao";
+import { consultaFilter, consultaForm, consultaPagination } from "../types/consulta";
 import Usuario from "../db/models/usuario";
+import { startOfDay, endOfDay } from 'date-fns';
+import { fromZonedTime } from 'date-fns-tz';
+
+const timezone = 'America/Sao_Paulo';
 
 
 async function validar(data: consultaForm) {
@@ -145,15 +148,16 @@ export async function destroy(id: number) {
     return response.id
 }
 
-export async function getConsultasByFilter(filter: clientFilter) {
+export async function getConsultasByFilter(filter: consultaFilter) {
 
     var list
 
     const whereConditions: any = {
         [Op.or]: [
-            { nome: { [Op.iLike]: `%${filter.pesquisa}%` } },
-            { endereco: { [Op.iLike]: `%${filter.pesquisa}%` } },
-            { indentificacao: { [Op.iLike]: `%${filter.pesquisa}%` } }
+            { descricao: { [Op.iLike]: `%${filter.pesquisa}%` } },
+            { procedimento: { [Op.iLike]: `%${filter.pesquisa}%` } },
+            { tipo: { [Op.iLike]: `%${filter.pesquisa}%` } },
+            { observacoes: { [Op.iLike]: `%${filter.pesquisa}%` } }
         ]
     }
 
@@ -161,18 +165,46 @@ export async function getConsultasByFilter(filter: clientFilter) {
 
     if (filter.criador) {
         andConditions.push({ usuario_criacao: { [Op.eq]: filter.criador } })
-      }
-
-    if (filter.dataInicio) {
-        const dataInicioFormatada = new Date(filter.dataInicio);
-        andConditions.push({ data_criacao: { [Op.gte]: dataInicioFormatada } });
     }
 
-    if (filter.dataFim) {
-        const dataFimFormatada = new Date(filter.dataFim);
-        andConditions.push({ data_criacao: { [Op.lte]: dataFimFormatada } });
+    if (filter.profissional) {
+        andConditions.push({profissional_id : { [Op.eq]: filter.profissional }})
     }
 
+    if (filter.cliente) {
+          andConditions.push({cliente_id : { [Op.eq]: filter.cliente }})
+    }
+
+    if (filter.dataCadastroInicio && filter.dataCadastroFim) {
+        // const inicio = fromZonedTime(startOfDay(new Date(filter.dataCadastroInicio)), timezone);
+        // const fim = fromZonedTime(endOfDay(new Date(filter.dataCadastroFim)), timezone);
+
+        const inicio = new Date(filter.dataCadastroInicio)
+        const fim = new Date(filter.dataCadastroFim)
+        andConditions.push({ data_criacao: { [Op.between]: [inicio, fim] } });
+    } else if (filter.dataCadastroInicio) {
+        const inicio = new Date(filter.dataCadastroInicio)
+        andConditions.push({ data_criacao: { [Op.gte]: inicio } });
+    } else if (filter.dataCadastroFim) {
+        const fim = new Date(filter.dataCadastroFim)
+        andConditions.push({ data_criacao: { [Op.lte]: fim } });
+    }
+
+
+    if (filter.horarioInicio && filter.horarioFim) {
+        // const inicio = fromZonedTime(startOfDay(new Date(filter.horarioInicio)), timezone);
+        // const fim = fromZonedTime(endOfDay(new Date(filter.horarioFim)), timezone);
+        const inicio = new Date(filter.horarioInicio)
+        const fim = new Date(filter.horarioFim + "T23:59:59")
+
+        andConditions.push({ horario: { [Op.between]: [inicio, fim] } });
+    } else if (filter.horarioInicio) {
+        const inicio = new Date(filter.horarioInicio)
+        andConditions.push({ horario: { [Op.gte]: inicio } });
+    } else if (filter.horarioFim) {
+        const fim = new Date(filter.horarioFim)
+        andConditions.push({ horario: { [Op.lte]: fim } });
+    }
 
     if (andConditions.length > 0) {
         whereConditions[Op.and] = andConditions;
@@ -180,7 +212,17 @@ export async function getConsultasByFilter(filter: clientFilter) {
 
     const lista = await Consulta.findAll(
         {
-            where:  whereConditions,
+            where: whereConditions,
+            include: [{
+                model: Cliente,
+                as: "cliente",
+                attributes: ["nome", "id"]
+            },
+            {
+                model: Usuario,
+                as: "profissional",
+                attributes: ["nome", "id"]
+            }],
             limit: filter.tamanhoPagina,
             offset: (filter.numeroPagina - 1) * filter.tamanhoPagina,
             order: [[Sequelize.literal(filter.modificador ? filter.modificador : "data_criacao"), filter.ordem ? filter.ordem : "DESC"]]

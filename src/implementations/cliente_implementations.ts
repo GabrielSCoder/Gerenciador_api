@@ -1,10 +1,11 @@
 import { Op, Sequelize, where } from "sequelize";
 import Cliente from "../db/models/cliente";
-import Perfil_Acesso from "../db/models/perfil_acesso";
 import Usuario from "../db/models/usuario";
 import { clienteForm, clientFilter, clientPagination } from "../types/cliente";
 import { paginationResponse } from "../types/paginacao";
-
+import { startOfDay, endOfDay } from 'date-fns';
+import { fromZonedTime } from 'date-fns-tz';
+const timezone = 'America/Sao_Paulo';
 
 async function validar(data: clienteForm) {
     if (!data.nome || !data.endereco || !data.numero)
@@ -41,7 +42,7 @@ async function convert(data: any) {
         telefone: data.telefone,
         telefone2: data.telefone2,
         data_criacao: data.data_criacao,
-        data_nascimento : data.data_nascimento,
+        data_nascimento: data.data_nascimento,
         perfil_acesso_id: data.perfil_acesso_id,
         perfil_acesso_usuario: data.perfil_acesso_usuario
     }
@@ -129,16 +130,18 @@ export async function getClientsByFilter(filter: clientFilter) {
 
     if (filter.criador) {
         andConditions.push({ usuario_criacao: { [Op.eq]: filter.criador } })
-      }
+    }
 
     if (filter.dataInicio) {
-        const dataInicioFormatada = new Date(filter.dataInicio);
-        andConditions.push({ data_criacao: { [Op.gte]: dataInicioFormatada } });
+        const localInicio = startOfDay(new Date(filter.dataInicio));
+        const utcInicio = fromZonedTime(localInicio, timezone);
+        andConditions.push({ data_criacao: { [Op.gte]: utcInicio } });
     }
 
     if (filter.dataFim) {
-        const dataFimFormatada = new Date(filter.dataFim);
-        andConditions.push({ data_criacao: { [Op.lte]: dataFimFormatada } });
+        const localFim = endOfDay(new Date(filter.dataFim));
+        const utcFim = fromZonedTime(localFim, timezone);
+        andConditions.push({ data_criacao: { [Op.lte]: utcFim } });
     }
 
 
@@ -149,7 +152,7 @@ export async function getClientsByFilter(filter: clientFilter) {
     const lista = await Cliente.findAll(
         {
             where: whereConditions,
-            include: [{ model: Usuario, as: "usuario_criador", attributes: ["id", "nome"] }, {model : Usuario, as : "usuario_modificador", attributes : ["id", "nome"]}],
+            include: [{ model: Usuario, as: "usuario_criador", attributes: ["id", "nome"] }, { model: Usuario, as: "usuario_modificador", attributes: ["id", "nome"] }],
             order: [[Sequelize.literal(filter.modificador ? filter.modificador : "data_criacao"), filter.ordem ? filter.ordem : "DESC"]]
         },
     )
@@ -177,7 +180,7 @@ export async function getClientsByFilter(filter: clientFilter) {
 }
 
 
-export async function getClienteSelect(filter : clientFilter) {
+export async function getClienteSelect(filter: clientFilter) {
     const list = await Cliente.findAll({
         where: {
             [Op.or]: [
