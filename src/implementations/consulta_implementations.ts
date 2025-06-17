@@ -4,10 +4,7 @@ import { clientFilter } from "../types/cliente";
 import Consulta from "../db/models/consulta";
 import { consultaFilter, consultaForm, consultaPagination } from "../types/consulta";
 import Usuario from "../db/models/usuario";
-import { startOfDay, endOfDay } from 'date-fns';
-import { fromZonedTime } from 'date-fns-tz';
 
-const timezone = 'America/Sao_Paulo';
 
 
 async function validar(data: consultaForm) {
@@ -67,6 +64,16 @@ async function convert(data: any) {
             id: data.profissional.id,
             nome: data.profissional.nome,
         } : null,
+
+        usuario_criador: data.usuario_criador ? {
+            id: data.usuario_criador.id,
+            nome: data.usuario_criador.nome
+        } : null,
+
+        usuario_modificador: data.usuario_modificador ? {
+            id: data.usuario_modificador.id,
+            nome: data.usuario_modificador.nome
+        } : null
     };
 
     return consulta;
@@ -168,11 +175,11 @@ export async function getConsultasByFilter(filter: consultaFilter) {
     }
 
     if (filter.profissional) {
-        andConditions.push({profissional_id : { [Op.eq]: filter.profissional }})
+        andConditions.push({ profissional_id: { [Op.eq]: filter.profissional } })
     }
 
     if (filter.cliente) {
-          andConditions.push({cliente_id : { [Op.eq]: filter.cliente }})
+        andConditions.push({ cliente_id: { [Op.eq]: filter.cliente } })
     }
 
     if (filter.dataCadastroInicio && filter.dataCadastroFim) {
@@ -206,6 +213,15 @@ export async function getConsultasByFilter(filter: consultaFilter) {
         andConditions.push({ horario: { [Op.lte]: fim } });
     }
 
+    const orderBy: any[] = [];
+
+    if (filter.modificador === "cliente_nome") {
+        orderBy.push([{ model: Cliente, as: "cliente" }, "nome", filter.ordem || "DESC"]);
+    } else {
+        const col = filter.modificador || "data_criacao";
+        orderBy.push([Sequelize.literal(col), filter.ordem || "DESC"]);
+    }
+
     if (andConditions.length > 0) {
         whereConditions[Op.and] = andConditions;
     }
@@ -220,31 +236,43 @@ export async function getConsultasByFilter(filter: consultaFilter) {
             },
             {
                 model: Usuario,
+                as: "usuario_criador",
+                attributes: ["nome", "id"]
+            },
+            {
+                model: Usuario,
+                as: "usuario_modificador",
+                attributes: ["nome", "id"]
+            },
+            {
+                model: Usuario,
                 as: "profissional",
                 attributes: ["nome", "id"]
             }],
             limit: filter.tamanhoPagina,
             offset: (filter.numeroPagina - 1) * filter.tamanhoPagina,
-            order: [[Sequelize.literal(filter.modificador ? filter.modificador : "data_criacao"), filter.ordem ? filter.ordem : "DESC"]]
+            order: orderBy
         },
     )
 
-    const nSegments = Math.ceil(lista.length / filter.tamanhoPagina)
+    const consultasConvertidas = await Promise.all(lista.map(convert));
+
+    const nSegments = Math.ceil(consultasConvertidas.length / filter.tamanhoPagina)
 
     if (nSegments != filter.numeroPagina) {
         const primeiraPos = (filter.numeroPagina - 1) * filter.tamanhoPagina
         const ultimaPos = primeiraPos + filter.tamanhoPagina
-        list = lista.slice(primeiraPos, ultimaPos)
+        list = consultasConvertidas.slice(primeiraPos, ultimaPos)
     } else if (nSegments == filter.numeroPagina) {
         const primeiraPos = (filter.numeroPagina - 1) * filter.tamanhoPagina
-        list = lista.slice(primeiraPos)
+        list = consultasConvertidas.slice(primeiraPos)
     }
 
     const item: consultaPagination = {
-        quantidade: lista.length,
+        quantidade: consultasConvertidas.length,
         pagina: filter.numeroPagina,
         numeroPaginas: nSegments,
-        listaConsultas: list || []
+        listaConsultas: consultasConvertidas || []
     }
 
     return item

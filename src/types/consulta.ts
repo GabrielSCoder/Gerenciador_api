@@ -32,7 +32,7 @@ export type consultaFilter = {
     cliente ?: number
     profissional ?: number
     ordem ?: "ASC" | "DESC"
-    modificador ?: "nome" | "data_criacao" | "data_modificacao"
+    modificador ?: "status" | "horario" | "data_criacao" | "data_modificacao" | "forma_pagamento" | "cliente_nome"
     tamanhoPagina : number
     numeroPagina : number
 }

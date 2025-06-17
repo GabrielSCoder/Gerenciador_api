@@ -23,12 +23,22 @@ class Usuario extends Model {
 
         Usuario.hasMany(models.Cliente, {
             foreignKey : "usuario_criacao",
-            as : "usuario_criador"
+            as : "usuario_cliente_criador"
         })
 
         Usuario.hasMany(models.Cliente, {
             foreignKey : "usuario_modificacao",
-            as : "usuario_modificador"
+            as : "usuario_cliente_modificador"
+        })
+
+        Usuario.hasMany(models.Consulta, {
+            foreignKey : "usuario_criacao",
+            as : "usuario_consulta_criador"
+        })
+
+        Usuario.hasMany(models.Consulta, {
+            foreignKey : "usuario_modificacao",
+            as : "usuario_consulta_modificador"
         })
 
         Usuario.hasMany(models.Consulta, {
