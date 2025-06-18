@@ -17,7 +17,7 @@ export type consultaForm = {
 
 export type consultaPagination = {
     quantidade: number,
-    pagina: number,
+    numeroPagina: number,
     numeroPaginas: number,
     listaConsultas: Array<any>
 }

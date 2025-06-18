@@ -249,8 +249,6 @@ export async function getConsultasByFilter(filter: consultaFilter) {
                 as: "profissional",
                 attributes: ["nome", "id"]
             }],
-            limit: filter.tamanhoPagina,
-            offset: (filter.numeroPagina - 1) * filter.tamanhoPagina,
             order: orderBy
         },
     )
@@ -270,9 +268,9 @@ export async function getConsultasByFilter(filter: consultaFilter) {
 
     const item: consultaPagination = {
         quantidade: consultasConvertidas.length,
-        pagina: filter.numeroPagina,
-        numeroPaginas: nSegments,
-        listaConsultas: consultasConvertidas || []
+        numeroPagina: filter.numeroPagina,
+        numeroPaginas: nSegments > 1 ? nSegments : 1,
+        listaConsultas: list || []
     }
 
     return item
