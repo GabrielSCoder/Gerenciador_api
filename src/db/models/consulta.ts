@@ -8,6 +8,7 @@ class Consulta extends Model {
     declare tipo: string
     declare preco: number
     declare horario: Date
+    declare hora_marcada: boolean
     declare cliente_id: number
     declare status: number
     declare dente_afetado: string
@@ -48,6 +49,7 @@ class Consulta extends Model {
             tipo: DataTypes.TEXT,
             preco: DataTypes.DECIMAL,
             horario: DataTypes.DATE,
+            hora_marcada: DataTypes.BOOLEAN,
             cliente_id: DataTypes.INTEGER,
             profissional_id: DataTypes.INTEGER,
             status: DataTypes.ENUM("marcada", "concluida", "cancelada"),

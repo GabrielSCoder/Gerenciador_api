@@ -13,6 +13,7 @@ export type consultaForm = {
     data_modificacao?: Date;
     pago?: boolean;
     status?: number;
+    hora_marcada : boolean
 };
 
 export type consultaPagination = {

@@ -37,12 +37,14 @@ async function validarUpdate(data: consultaForm & { id: number }) {
 
 
 async function convert(data: any) {
+    console.log(data)
     const consulta = {
         id: data.id,
         descricao: data.descricao,
         cliente_id: data.cliente_id,
         preco: data.preco ? parseFloat(data.preco.toString()) : 0,
         horario: data.horario ?? "",
+        hora_marcada : data.hora_marcada,
         profissional_id: data.profissional_id,
         forma_pagamento: data.forma_pagamento,
         pago: data.pago,
